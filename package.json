@@ -1,0 +1,24 @@
+{
+  "name": "CMS",
+  "version": "1.0.0",
+  "description": "",
+  "main": "cms.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KatieMcbride/CMS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KatieMcbride/CMS/issues"
+  },
+  "homepage": "https://github.com/KatieMcbride/CMS#readme",
+  "dependencies": {
+    "inquirer": "^7.0.0",
+    "mysql": "^2.17.1"
+  }
+}
