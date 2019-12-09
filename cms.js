@@ -77,25 +77,26 @@ function viewDepartment() {
     inquirer
       .prompt({
         name: "department",
-        type: "list",
+        type: "rawlist",
         message: "What department would you like to see?",
         choices: [
-            "Sales",
-            "Legal",
-            "Engineer",
-            "Finance"
+            "1",
+            "2",
+            "2",
+            "4",
+            "5"
           ]
       })
       .then(function(answer) {
         console.log(answer.name);
-        connection.query("SELECT * FROM department WHERE ?", { department_name: answer.department }, function(err, res) {
-          console.log(
-            "Department Name: " +
-              res[0].department_name +
-              " || Id " +
-              res[0].id
-            )
-        //   runSearch();
+
+        var query = "SELECT department.department_name, role.title, role.salary ";
+        query += "FROM department INNER JOIN role ON (department.id = role.department_id)";
+        query += "WHERE (department.id = ? AND role.department_id = ?)";
+        
+
+        connection.query(query, [answer.department, answer.department], function(err, res) {
+          console.table(res);
         });
       });
 }
