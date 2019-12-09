@@ -71,9 +71,9 @@ function start() {
           break;
         }
       });
-  }
+}
 
-  function viewDepartment() {
+function viewDepartment() {
     inquirer
       .prompt({
         name: "department",
@@ -98,7 +98,7 @@ function start() {
         //   runSearch();
         });
       });
-  }
+}
 
 
 //   ADD DEPARTMENT
@@ -118,6 +118,83 @@ function addDepartment() {
             err => {
                 if (err) throw err;
                 console.log('your department was created')
+            }
+        );
+    })
+}
+
+// ADD ROLE
+function addRole() {
+    inquirer
+      .prompt([
+      {
+        name: "addTitle",
+        type: "input",
+        message: "What role would you like to add?",
+      },
+      {
+        name: 'addSal',
+        type: 'input',
+        message: 'What is the Salary?'
+        },
+        {
+        name: 'addDepId',
+        type: 'input',
+        message: 'What is the Department ID?'
+        }
+    ])
+      .then(answer =>{
+        connection.query(
+            'INSERT INTO role SET ?',
+            {
+                title: answer.addTitle,
+                salary: answer.addSal,
+                department_id: answer.addDepId
+            },
+            err => {
+                if (err) throw err;
+                console.log('your role was created')
+            }
+        );
+    })
+}
+
+function addEmployee() {
+    inquirer
+      .prompt([
+      {
+        name: 'addFirstName',
+        type: "input",
+        message: "What is the first name?",
+      },
+      {
+        name: 'addLastName',
+        type: 'input',
+        message: 'What is the last name?'
+    },
+    {
+        name: 'addRolId',
+        type: 'input',
+        message: 'What is the Role ID'
+    },
+    {
+        name: 'addManId',
+        type: 'input',
+        message: 'What is the Manager ID?'
+    }
+    ])
+      .then(answer =>{
+        connection.query(
+            'INSERT INTO employee SET ?',
+            {
+                first_name: answer.addFirstName,
+                last_name: answer.addLastName,
+                role_id: answer.addRolId,
+                manager_id: answer.addManId
+            },
+            err => {
+                if (err) throw err;
+                console.log('your employee was created')
             }
         );
     })

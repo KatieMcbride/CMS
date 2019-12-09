@@ -1,6 +1,6 @@
-CREATE DATABASE department_db;
+CREATE DATABASE cms_db;
 
-USE department_db;
+USE cms_db;
 
 CREATE TABLE department(
     id INT NOT NULL AUTO_INCREMENT,
@@ -8,21 +8,17 @@ CREATE TABLE department(
     PRIMARY KEY (id)
 )
 
-CREATE DATABASE role_db;
+INSERT INTO department (department_name) VALUES ("Sales");
 
-USE role_db;
 
 CREATE TABLE role(
     id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(30) NOT NULL,
-    salary DECIMAL(10,4) NULL,
+    salary DECIMAL(10,2) NULL,
     department_id INT NOT NULL,
     PRIMARY KEY (id)
 )
 
-CREATE DATABASE employee_db;
-
-USE employee_db;
 
 CREATE TABLE employee(
     id INT NOT NULL AUTO_INCREMENT,
