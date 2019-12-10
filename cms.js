@@ -80,11 +80,11 @@ function viewDepartment() {
         type: "rawlist",
         message: "What department would you like to see?",
         choices: [
-            "1",
-            "2",
-            "2",
-            "4",
-            "5"
+            "1. Sales",
+            "2. Finance",
+            "3. Legal",
+            "4. Engineer",
+            "5. Management"
           ]
       })
       .then(function(answer) {
@@ -99,6 +99,41 @@ function viewDepartment() {
           console.table(res);
         });
       });
+}
+
+// VIEW ROLE
+function viewRole() {
+    inquirer
+      .prompt({
+        name: "role",
+        type: "rawlist",
+        message: "Which role would you like to see?",
+        choices: [
+            "4. Software Engineer",
+            "5. Junior Manager",
+            "1. Senior Sales",
+            "1. Junior Sales",
+            "2. Accountant",
+            "2. Auditor",
+            "3. Lawyer",
+            "3. Paralegal",
+            "4. Web Developer",
+            "4. Engineer",
+            "5. CEO",
+            "5. Senior Manager"
+          ]
+      })
+      .then(function(answer) {
+        var query = "SELECT role.title, role.salary, role.department_id, department.department_name";
+        query += "FROM role INNER JOIN department ON (role.department_id = department.id)";
+        query += "WHERE (role.department_id = ? AND department.id = ?)";
+        
+
+        connection.query(query, [answer.role, answer.role], function(err, res) {
+            if (err) throw err;
+            console.table(res)
+        });
+    });
 }
 
 
