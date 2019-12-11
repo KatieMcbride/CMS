@@ -92,7 +92,7 @@ function viewDepartment() {
 
         var query = "SELECT department.department_name, role.title, role.salary ";
         query += "FROM department INNER JOIN role ON (department.id = role.department_id)";
-        query += "WHERE (department.id = ? AND role.department_id = ?)";
+        query += "WHERE (department.id = ?)";
         
 
         connection.query(query, [answer.department, answer.department], function(err, res) {
@@ -109,27 +109,29 @@ function viewRole() {
         type: "rawlist",
         message: "Which role would you like to see?",
         choices: [
-            "4. Software Engineer",
-            "5. Junior Manager",
-            "1. Senior Sales",
-            "1. Junior Sales",
-            "2. Accountant",
-            "2. Auditor",
-            "3. Lawyer",
-            "3. Paralegal",
-            "4. Web Developer",
-            "4. Engineer",
-            "5. CEO",
-            "5. Senior Manager"
+            "Software Engineer",
+            "Junior Manager",
+            "Senior Sales",
+            "Junior Sales",
+            "Accountant",
+            "Auditor",
+            "Lawyer",
+            "Paralegal",
+            "Web Developer",
+            "Engineer",
+            "CEO",
+            "Senior Manager"
           ]
       })
       .then(function(answer) {
-        var query = "SELECT role.title, role.salary, role.department_id, department.department_name";
+        var query = "SELECT *";
         query += "FROM role INNER JOIN department ON (role.department_id = department.id)";
-        query += "WHERE (role.department_id = ? AND department.id = ?)";
+        query += "WHERE (role.title = ?)";
         
+        console.log(answer.role);
 
-        connection.query(query, [answer.role, answer.role], function(err, res) {
+        connection.query(query, [answer.role], function(err, res) {
+            
             if (err) throw err;
             console.table(res)
         });
