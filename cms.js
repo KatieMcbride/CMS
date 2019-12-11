@@ -1,6 +1,7 @@
 var mysql = require("mysql");
 const inquirer = require('inquirer');
 const cTable = require('console.table');
+employeeList = [];
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -36,6 +37,7 @@ function start() {
           "View department",
           "View role",
           "View employee",
+          "View all Employees",
           "Update Employee Role"
 
         ]
@@ -64,6 +66,10 @@ function start() {
 
         case "View employee":
           viewEmployee();
+          break;
+        
+        case "View all Employees":
+          allEmployee();
           break;
 
         case "Update Employee Role":
@@ -125,7 +131,7 @@ function viewRole() {
       })
       .then(function(answer) {
         var query = "SELECT *";
-        query += "FROM role INNER JOIN department ON (role.department_id = department.id)";
+        query += "FROM department INNER JOIN role ON (role.department_id = department.id)";
         query += "WHERE (role.title = ?)";
         
         console.log(answer.role);
@@ -137,6 +143,61 @@ function viewRole() {
         });
     });
 }
+
+
+// DO connection query first to render names (push). then prompt questions, then another connection query
+function viewEmployee() {
+    var query = "SELECT first_name, last_name FROM employee"
+
+    connection.query(query, function(err, res) {
+        if (err) throw err;
+        // console.log(res);
+
+    for(i= 0; i< res.length; i++) {
+        var currentEmployee = res[i];
+        employeeList.push(currentEmployee);
+    };
+
+    console.log(employeeList);
+    console.log(employeeList[0]);
+    
+    //  console.table(employeeList);
+}) 
+    employeeCall();
+};
+
+
+
+function employeeCall() {
+    inquirer
+      .prompt({
+        name: "employee",
+        type: "rawlist",
+        message: "Which employee would you like to see?",
+        choices: [
+           'John Smith',
+           'Taylor McBride',
+           'Seth Chatterly',
+           'Charlotte McBride'
+          ]
+      })
+      .then(function(answer) {
+        var query = "SELECT *";
+        query += "FROM employee INNER JOIN role ON (employee.role_id = role.id)";
+        query += "WHERE (employee.first_name = ? and employee.last_name)";
+        
+        console.log(answer.role);
+
+        connection.query(query, [answer.role], function(err, res) {
+            
+            if (err) throw err;
+            console.table(res)
+        });
+    });
+};
+
+
+   
 
 
 //   ADD DEPARTMENT
@@ -195,7 +256,23 @@ function addRole() {
             }
         );
     })
-}
+};
+
+// View all employees
+function allEmployee(){
+   
+    var query = "SELECT *";
+    query += "FROM employee INNER JOIN role ON (employee.role_id = role.id)";
+   
+
+    connection.query(query, function(err, res) {
+        
+        if (err) throw err;
+        console.table(res)
+    })
+};    
+
+
 
 function addEmployee() {
     inquirer
@@ -211,24 +288,32 @@ function addEmployee() {
         message: 'What is the last name?'
     },
     {
-        name: 'addRolId',
-        type: 'input',
-        message: 'What is the Role ID'
-    },
-    {
-        name: 'addManId',
-        type: 'input',
-        message: 'What is the Manager ID?'
-    }
-    ])
-      .then(answer =>{
+        name: 'addRole',
+        type: 'rawlist',
+        message: 'What is the Role?',
+        choices: [
+            "Software Engineer",
+            "Junior Manager",
+            "Senior Sales",
+            "Junior Sales",
+            "Accountant",
+            "Auditor",
+            "Lawyer",
+            "Paralegal",
+            "Web Developer",
+            "Engineer",
+            "CEO",
+            "Senior Manager"
+        ]
+    }   
+    ]).then(answer =>{
         connection.query(
             'INSERT INTO employee SET ?',
             {
                 first_name: answer.addFirstName,
                 last_name: answer.addLastName,
-                role_id: answer.addRolId,
-                manager_id: answer.addManId
+                role_id: answer.addRole.answer,
+                // manager_id: answer.addManId
             },
             err => {
                 if (err) throw err;
@@ -236,4 +321,4 @@ function addEmployee() {
             }
         );
     })
-}
+}         
