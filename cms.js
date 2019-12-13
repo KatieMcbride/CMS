@@ -38,7 +38,8 @@ function start() {
           "View role",
           "View employee",
           "View all Employees",
-          "Update Employee Role"
+          "Update Employee Role",
+          "Delete Employee"
 
         ]
       })
@@ -74,6 +75,10 @@ function start() {
 
         case "Update Employee Role":
           updateEmployee();
+          break;
+        
+        case "Delete Employee":
+          deleteEmployee();
           break;
         }
       });
@@ -264,6 +269,7 @@ function allEmployee(){
 
 
 function addEmployee() {
+
     inquirer
       .prompt([
       {
@@ -281,18 +287,8 @@ function addEmployee() {
         type: 'rawlist',
         message: 'What is the Role?',
         choices: [
-            "Software Engineer",
-            "Junior Manager",
-            "Senior Sales",
-            "Junior Sales",
-            "Accountant",
-            "Auditor",
-            "Lawyer",
-            "Paralegal",
-            "Web Developer",
-            "Engineer",
-            "CEO",
-            "Senior Manager"
+            {name: "Software Engineer",
+            value: 1}
         ]
     }   
     ]).then(answer =>{
@@ -301,7 +297,7 @@ function addEmployee() {
             {
                 first_name: answer.addFirstName,
                 last_name: answer.addLastName,
-                role_id: answer.addRole.answer,
+                role_id: answer.addRole,
                 // manager_id: answer.addManId
             },
             err => {
@@ -310,4 +306,38 @@ function addEmployee() {
             }
         );
     })
-}         
+}   
+
+function deleteEmployee() {
+    let query =
+      "SELECT employee.id, employee.first_name, employee.last_name, role.title FROM employee INNER JOIN role ON role.id = employee.role_id";
+    connection.query(query, (err, res) => {
+      if (err) throw err;
+      inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "delete",
+          message: "Select Employee to Remove",
+          choices: function() {
+            let choiceArray = [];
+            res.forEach(employee => {
+              choiceArray.push(
+                `${employee.first_name} ${employee.last_name}, ${employee.title}, ${employee.id}`
+              );
+            });
+            return choiceArray;
+          }
+        }
+      ]).then(ans => {
+        let choice = ans.delete;
+        let id = choice.match(/\d+/g);
+        let query = "DELETE FROM employee WHERE id = ?";
+        connection.query(query, id, (err, res) => {
+          if (err) throw err;
+          console.log("succesfully deleted");
+        });
+      });
+      start();
+    });
+  }
