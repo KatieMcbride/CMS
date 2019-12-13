@@ -1,7 +1,7 @@
 var mysql = require("mysql");
 const inquirer = require('inquirer');
 const cTable = require('console.table');
-employeeList = [];
+
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -150,36 +150,22 @@ function viewEmployee() {
     var query = "SELECT first_name, last_name FROM employee"
 
     connection.query(query, function(err, res) {
-        if (err) throw err;
-        // console.log(res);
-
-    for(i= 0; i< res.length; i++) {
-        var currentEmployee = res[i];
-        employeeList.push(currentEmployee);
-    };
-
-    console.log(employeeList);
-    console.log(employeeList[0]);
-    
-    //  console.table(employeeList);
-}) 
-    employeeCall();
-};
-
-
-
-function employeeCall() {
+        // if (err) throw err;
     inquirer
       .prompt({
         name: "employee",
-        type: "rawlist",
+        type: "list",
         message: "Which employee would you like to see?",
-        choices: [
-           'John Smith',
-           'Taylor McBride',
-           'Seth Chatterly',
-           'Charlotte McBride'
-          ]
+        choices: function(){
+            employeeList = [];
+            for(i= 0; i< res.length; i++) {
+                var currentEmployee = res[i];
+                employeeList.push({
+                    name:`${res[i].first_name} ${res[i].last_name}`
+                });
+            };
+            return employeeList;
+        }
       })
       .then(function(answer) {
         var query = "SELECT *";
@@ -194,6 +180,16 @@ function employeeCall() {
             console.table(res)
         });
     });
+        // console.log(res);
+        // console.log(res[0]);
+
+    
+
+    // console.log(employeeList);
+    // console.log(employeeList[0]);
+    
+    //  console.table(employeeList);
+}) 
 };
 
 
