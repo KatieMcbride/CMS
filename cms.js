@@ -39,7 +39,8 @@ function start() {
           "View employee",
           "View all Employees",
           "Update Employee Role",
-          "Delete Employee"
+          "Delete Employee",
+          "Delete Department"
 
         ]
       })
@@ -80,10 +81,15 @@ function start() {
         case "Delete Employee":
           deleteEmployee();
           break;
+        
+        case "Delete Department":
+           deleteDepartment();
+           break;
         }
       });
 }
 
+// View specific Departments
 function viewDepartment() {
     inquirer
       .prompt({
@@ -150,10 +156,9 @@ function viewRole() {
         });
         start();
     });
-}
+};
 
-
-// DO connection query first to render names (push). then prompt questions, then another connection query
+// View an Employee
 function viewEmployee() {
     var query = "SELECT first_name, last_name, role_id FROM employee"
 
@@ -189,7 +194,6 @@ function viewEmployee() {
 }) 
 };
 
-
 //   ADD DEPARTMENT
 function addDepartment() {
     inquirer
@@ -212,7 +216,7 @@ function addDepartment() {
         start();
     })
     
-}
+};
 
 // ADD ROLE
 function addRole() {
@@ -288,8 +292,7 @@ function allEmployee(){
     start();
 };    
 
-
-
+// Add en Employee
 function addEmployee() {
 
     inquirer
@@ -372,8 +375,9 @@ function addEmployee() {
         );
         start();
     })
-}   
+}; 
 
+// Delete Employee
 function deleteEmployee() {
     let query =
       "SELECT employee.id, employee.first_name, employee.last_name, role.title FROM employee INNER JOIN role ON role.id = employee.role_id";
@@ -406,4 +410,39 @@ function deleteEmployee() {
       });
       start();
     });
-  }
+};
+
+// DELETE DEPARTMENT
+function deleteDepartment() {
+    let query =
+      "SELECT * FROM department";
+    connection.query(query, (err, res) => {
+      if (err) throw err;
+      inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "deleteDepartment",
+          message: "Select department to Remove",
+          choices: function() {
+            let choiceArray = [];
+            res.forEach(department => {
+              choiceArray.push(
+                `${department.department_name}, ${department.id}`
+              );
+            });
+            return choiceArray;
+          }
+        }
+      ]).then(ans => {
+        let choice = ans.deleteDepartment;
+        let id = choice.match(/\d+/g);
+        let query = "DELETE FROM department WHERE id = ?";
+        connection.query(query, id, (err, res) => {
+          if (err) throw err;
+          console.log("succesfully deleted");
+        });
+      });
+    });
+    // start();
+};
