@@ -40,8 +40,8 @@ function start() {
           "View all Employees",
           "Update Employee Role",
           "Delete Employee",
-          "Delete Department"
-
+          "Delete Department",
+          "Delete Role"
         ]
       })
       .then(function(answer) {
@@ -85,6 +85,10 @@ function start() {
         case "Delete Department":
            deleteDepartment();
            break;
+
+        case "Delete Role":
+            deleteRole();
+            break;
         }
       });
 }
@@ -211,9 +215,10 @@ function addDepartment() {
             err => {
                 if (err) throw err;
                 console.log('your department was created')
+                start();
             }
         );
-        start();
+        
     })
     
 };
@@ -255,7 +260,7 @@ function addRole() {
             },
             {
                 name: "Management",
-                vaue: 5
+                value: 5
             }
         ]
         }
@@ -312,10 +317,13 @@ function addEmployee() {
         type: 'rawlist',
         message: 'What is the Role?',
         choices: [
-            {name: "Software Engineer",
-            value: 1},
-            { name: "Junior Manager",
-            value: 2
+            {
+                name: "Software Engineer",
+                value: 1
+            },
+            { 
+                name: "Junior Manager",
+                value: 2
             },
             {
                name: "Senior Sales",
@@ -370,10 +378,11 @@ function addEmployee() {
             },
             err => {
                 if (err) throw err;
-                console.log('your employee was created')
+                console.log('your employee was created');
+                start();
             }
         );
-        start();
+       
     })
 }; 
 
@@ -406,9 +415,9 @@ function deleteEmployee() {
         connection.query(query, id, (err, res) => {
           if (err) throw err;
           console.log("succesfully deleted");
+          start();
         });
       });
-      start();
     });
 };
 
@@ -441,8 +450,44 @@ function deleteDepartment() {
         connection.query(query, id, (err, res) => {
           if (err) throw err;
           console.log("succesfully deleted");
+          start();
         });
       });
     });
-    // start();
+};
+
+// Delete Role
+function deleteRole() {
+    let query =
+      "SELECT * FROM role";
+    connection.query(query, (err, res) => {
+      if (err) throw err;
+      inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "deleteRole",
+          message: "Select role to Remove",
+          choices: function() {
+            let choiceArray = [];
+            res.forEach(role => {
+              choiceArray.push(
+                `${role.title}, ${role.id}`
+              );
+            });
+            return choiceArray;
+          }
+        }
+      ]).then(ans => {
+        let choice = ans.deleteRole;
+        let id = choice.match(/\d+/g);
+        let query = "DELETE FROM role WHERE id = ?";
+        connection.query(query, id, (err, res) => {
+          if (err) throw err;
+          console.log("succesfully deleted");
+          start();
+        });
+      });
+    });
+    
 };
