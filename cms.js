@@ -104,7 +104,9 @@ function viewDepartment() {
         connection.query(query, [answer.department, answer.department], function(err, res) {
           console.table(res);
         });
+        start();
       });
+    
 }
 
 // VIEW ROLE
@@ -141,6 +143,7 @@ function viewRole() {
             if (err) throw err;
             console.table(res)
         });
+        start();
     });
 }
 
@@ -176,6 +179,7 @@ function viewEmployee() {
             if (err) throw err;
             console.table(res);
         });
+        start();
     });
 }) 
 };
@@ -200,7 +204,9 @@ function addDepartment() {
                 console.log('your department was created')
             }
         );
+        start();
     })
+    
 }
 
 // ADD ROLE
@@ -236,6 +242,7 @@ function addRole() {
                 console.log('your role was created')
             }
         );
+        start();
     })
 };
 
@@ -251,6 +258,7 @@ function allEmployee(){
         if (err) throw err;
         console.table(res)
     })
+    start();
 };    
 
 
