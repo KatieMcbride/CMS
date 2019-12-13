@@ -230,8 +230,30 @@ function addRole() {
         },
         {
         name: 'addDepId',
-        type: 'input',
-        message: 'What is the Department ID?'
+        type: 'list',
+        message: 'What is the Department?',
+        choices:[
+            {
+                name: "sales",
+                value: 1
+            },
+            {
+                name: "Finance",
+                value: 2
+            },
+            {
+                name: "Legal",
+                value: 3
+            },
+            {
+                name: "Engineer",
+                value: 4
+            },
+            {
+                name: "Management",
+                vaue: 5
+            }
+        ]
         }
     ])
       .then(answer =>{
@@ -288,7 +310,50 @@ function addEmployee() {
         message: 'What is the Role?',
         choices: [
             {name: "Software Engineer",
-            value: 1}
+            value: 1},
+            { name: "Junior Manager",
+            value: 2
+            },
+            {
+               name: "Senior Sales",
+               value: 3
+            },
+            {
+                name: "Junior Sales",
+                value: 4
+            },
+            {
+                name:"Accountant",
+                value: 5
+            },
+            {
+                name:"Auditor",
+                value: 6
+            },
+            {
+                name: "Lawyer",
+                value: 7
+            },
+            {
+                name:"Paralegal",
+                value: 8
+            },
+            {
+                name: "Web Developer",
+                value: 9
+            },
+            {
+                name: "Engineer",
+                value: 10
+            },
+            {
+                name:"CEO",
+                value: 11
+            },
+            {
+                name:"Senior Manager",
+                value:12
+            }
         ]
     }   
     ]).then(answer =>{
@@ -305,6 +370,7 @@ function addEmployee() {
                 console.log('your employee was created')
             }
         );
+        start();
     })
 }   
 
