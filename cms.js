@@ -147,11 +147,11 @@ function viewRole() {
 
 // DO connection query first to render names (push). then prompt questions, then another connection query
 function viewEmployee() {
-    var query = "SELECT first_name, last_name FROM employee"
+    var query = "SELECT first_name, last_name, role_id FROM employee"
 
     connection.query(query, function(err, res) {
         // if (err) throw err;
-    inquirer
+      inquirer
       .prompt({
         name: "employee",
         type: "list",
@@ -161,39 +161,24 @@ function viewEmployee() {
             for(i= 0; i< res.length; i++) {
                 var currentEmployee = res[i];
                 employeeList.push({
-                    name:`${res[i].first_name} ${res[i].last_name}`
+                    name:`${res[i].first_name} ${res[i].last_name}`,
+                    value:`${res[i].role_id}`
                 });
             };
             return employeeList;
         }
       })
       .then(function(answer) {
-        var query = "SELECT *";
-        query += "FROM employee INNER JOIN role ON (employee.role_id = role.id)";
-        query += "WHERE (employee.first_name = ? and employee.last_name)";
-        
-        console.log(answer.role);
+        var query = "SELECT * FROM employee INNER JOIN role ON (employee.role_id = role.id) WHERE (employee.role_id = ?)";
 
-        connection.query(query, [answer.role], function(err, res) {
-            
+        connection.query(query, [answer.employee], function(err, res) {
+            console.log(answer.employee);
             if (err) throw err;
-            console.table(res)
+            console.table(res);
         });
     });
-        // console.log(res);
-        // console.log(res[0]);
-
-    
-
-    // console.log(employeeList);
-    // console.log(employeeList[0]);
-    
-    //  console.table(employeeList);
 }) 
 };
-
-
-   
 
 
 //   ADD DEPARTMENT
