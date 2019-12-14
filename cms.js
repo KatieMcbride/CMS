@@ -38,7 +38,6 @@ function start() {
           "View role",
           "View employee",
           "View all Employees",
-          "Update Employee Role",
           "Delete Employee",
           "Delete Department",
           "Delete Role"
@@ -72,10 +71,6 @@ function start() {
         
         case "View all Employees":
           allEmployee();
-          break;
-
-        case "Update Employee Role":
-          updateEmployee();
           break;
         
         case "Delete Employee":
@@ -148,7 +143,7 @@ function viewRole() {
       })
       .then(function(answer) {
         var query = "SELECT *";
-        query += "FROM department INNER JOIN role ON (role.department_id = department.id)";
+        query += "FROM role INNER JOIN department ON (role.department_id = department.id)";
         query += "WHERE (role.title = ?)";
         
         console.log(answer.role);
@@ -158,7 +153,6 @@ function viewRole() {
             if (err) throw err;
             console.table(res)
         });
-        start();
     });
 };
 
